@@ -29,7 +29,7 @@ Aplikasi web (PWA) untuk manajemen keuangan pribadi: multi akun/dompet, pemasuka
    `https://<PROJECT-ID>.supabase.co/auth/v1/callback`
 5. Simpan, copy **Client ID** dan **Client Secret**.
 6. Di Supabase Dashboard → **Authentication → Providers → Google** → aktifkan, tempel Client ID & Client Secret → Save.
-7. Di **Authentication → URL Configuration**, isi **Site URL** dengan alamat hosting nanti (contoh: `https://<username>.github.io/keuangan-tmrizk/`), dan tambahkan alamat yang sama di **Redirect URLs**.
+7. Di **Authentication → URL Configuration**, isi **Site URL** dengan `https://rizkidye-ai.github.io/Keungan-Negara-Pribadi/`, dan tambahkan alamat yang sama di **Redirect URLs**.
 
 ### 3. Isi kredensial di kode
 Edit [`config.js`](config.js):
@@ -40,10 +40,11 @@ const SUPA_ANON_KEY = 'ey...';
 Anon key aman ditaruh di frontend (bukan rahasia) — akses data tetap dijaga oleh RLS di server.
 
 ### 4. Deploy ke GitHub Pages
-1. Buat repo baru di GitHub (public, kosong tanpa README).
-2. Push isi folder ini ke repo tersebut.
-3. Di repo GitHub → **Settings → Pages** → Source: pilih branch `main`, folder `/ (root)` → Save.
-4. Setelah beberapa menit, app akan aktif di `https://<username>.github.io/<nama-repo>/`.
+Repo: https://github.com/rizkidye-ai/Keungan-Negara-Pribadi (sudah di-push)
+1. Buka repo itu → **Settings → Pages**.
+2. Di **Build and deployment → Source**, pilih **Deploy from a branch**.
+3. **Branch**: pilih `main`, folder `/ (root)` → **Save**.
+4. Tunggu 1-2 menit, app akan aktif di `https://rizkidye-ai.github.io/Keungan-Negara-Pribadi/`.
 5. Balik ke Supabase → **Authentication → URL Configuration**, pastikan Site URL & Redirect URLs pakai URL GitHub Pages ini (bukan localhost).
 
 Setelah itu tinggal share link-nya ke saudara/teman — mereka tinggal buka, klik **Login dengan Google**, dan langsung bisa mulai catat keuangan sendiri (mulai dari menambah akun di tab **Akun**).
