@@ -16,3 +16,9 @@ const ACCOUNT_TYPES = {
   ewallet: { label: 'E-wallet',  icon: '📱' },
   lainnya: { label: 'Lainnya',   icon: '💼' }
 };
+
+const CATEGORY_ICONS = {
+  Makan: '🍔', Transport: '🚗', Belanja: '🛍️', Tagihan: '🧾', Hiburan: '🎬',
+  Kesehatan: '💊', Pendidikan: '📚', Tabungan: '🐷', Lainnya: '📦',
+  Gaji: '💼', Bonus: '🎁', Hadiah: '🎉', Usaha: '📈', Transfer: '⇄'
+};

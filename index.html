@@ -153,14 +153,21 @@
   .tx .note{font-size:12px; color:var(--sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .tx .amt{font-size:14px; font-weight:700; white-space:nowrap;}
   .tx.pemasukan .amt{color:var(--in);} .tx.pengeluaran .amt{color:var(--out);} .tx.transfer .amt{color:#4A6FA5;}
-  .empty-state{text-align:center; color:var(--sub); font-size:13px; padding:40px 10px;}
+  .empty-state{text-align:center; color:var(--sub); font-size:13px; padding:40px 16px; line-height:1.6;}
+  .empty-state .eic2{font-size:38px; margin-bottom:10px; opacity:.85;}
+
+  /* ---------- Shared icon box ---------- */
+  .icon-box{width:40px; height:40px; border-radius:11px; background:#EEF6F3; color:var(--accent-dk);
+    display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;}
 
   /* ---------- Budget / Goal / Account cards ---------- */
-  .prog-card{background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:14px; margin-bottom:10px; cursor:pointer;}
-  .prog-card .top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;}
+  .prog-card{background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:14px; margin-bottom:10px; cursor:pointer;
+    display:flex; gap:12px; align-items:flex-start;}
+  .prog-card .pc-body{flex:1; min-width:0;}
+  .prog-card .top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px; gap:8px;}
   .prog-card .name{font-size:14px; font-weight:700;}
   .prog-card .sub{font-size:12px; color:var(--sub); margin-top:2px;}
-  .prog-card .amt{font-size:12px; color:var(--sub); text-align:right;}
+  .prog-card .amt{font-size:12px; color:var(--sub); text-align:right; flex-shrink:0;}
   .prog-bar{height:8px; border-radius:6px; background:#EEF1F0; overflow:hidden;}
   .prog-bar .fill{height:100%; border-radius:6px; background:var(--accent); transition:width .3s;}
   .prog-bar .fill.warn{background:var(--warn);}
@@ -168,15 +175,13 @@
 
   .acct-card{background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:14px 16px;
     display:flex; align-items:center; gap:12px; margin-bottom:10px; cursor:pointer;}
-  .acct-card .ic{width:40px; height:40px; border-radius:10px; background:#EEF6F3; display:flex; align-items:center;
-    justify-content:center; font-size:19px; flex-shrink:0;}
   .acct-card .mid{flex:1;}
   .acct-card .name{font-size:14px; font-weight:700;}
   .acct-card .type{font-size:12px; color:var(--sub);}
   .acct-card .bal{font-size:14px; font-weight:700;}
 
   .recur-item{background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:12px 14px;
-    display:flex; align-items:center; gap:10px; margin-bottom:8px; cursor:pointer;}
+    display:flex; align-items:center; gap:12px; margin-bottom:8px; cursor:pointer;}
   .recur-item .mid{flex:1; min-width:0;}
   .recur-item .cat{font-size:13px; font-weight:700;}
   .recur-item .sub{font-size:11px; color:var(--sub);}
@@ -211,7 +216,11 @@
   .overlay.show{display:flex;}
   .sheet{background:var(--card); width:100%; max-width:480px; border-radius:20px 20px 0 0;
     padding:18px 18px calc(env(safe-area-inset-bottom,0px) + 18px); max-height:88vh; overflow-y:auto;}
-  .sheet h3{margin:0 0 14px; font-size:16px;}
+  .sheet::before{content:''; display:block; width:40px; height:4px; border-radius:3px; background:var(--line);
+    margin:0 auto 14px;}
+  .sheet-head{display:flex; align-items:center; gap:12px; margin-bottom:18px;}
+  .sheet-head .icon-box{width:44px; height:44px; border-radius:13px; font-size:20px;}
+  .sheet h3{margin:0; font-size:16px;}
   .type-toggle{display:flex; background:#EEF1F0; border-radius:10px; padding:4px; margin-bottom:14px;}
   .type-toggle button{flex:1; border:none; background:transparent; padding:9px; border-radius:8px;
     font-size:13px; font-weight:600; color:var(--sub); cursor:pointer;}
@@ -386,7 +395,7 @@
   <!-- ===== Sheet: Transaksi ===== -->
   <div class="overlay" id="txOverlay">
     <div class="sheet">
-      <h3 id="txSheetTitle">Tambah Transaksi</h3>
+      <div class="sheet-head"><div class="icon-box">💸</div><h3 id="txSheetTitle">Tambah Transaksi</h3></div>
       <div class="type-toggle">
         <button type="button" class="pengeluaran" id="typePengeluaran">Pengeluaran</button>
         <button type="button" class="pemasukan" id="typePemasukan">Pemasukan</button>
@@ -432,7 +441,7 @@
   <!-- ===== Sheet: Akun ===== -->
   <div class="overlay" id="acctOverlay">
     <div class="sheet">
-      <h3 id="acctSheetTitle">Tambah Akun</h3>
+      <div class="sheet-head"><div class="icon-box">👛</div><h3 id="acctSheetTitle">Tambah Akun</h3></div>
       <div class="field">
         <label>Nama akun</label>
         <input type="text" id="aName" placeholder="Contoh: BCA, Cash, GoPay">
@@ -462,7 +471,7 @@
   <!-- ===== Sheet: Anggaran ===== -->
   <div class="overlay" id="budgetOverlay">
     <div class="sheet">
-      <h3 id="budgetSheetTitle">Tambah Anggaran</h3>
+      <div class="sheet-head"><div class="icon-box">📊</div><h3 id="budgetSheetTitle">Tambah Anggaran</h3></div>
       <div class="field">
         <label>Kategori</label>
         <select id="bCategory"></select>
@@ -483,7 +492,7 @@
   <!-- ===== Sheet: Tabungan ===== -->
   <div class="overlay" id="goalOverlay">
     <div class="sheet">
-      <h3 id="goalSheetTitle">Tambah Target Tabungan</h3>
+      <div class="sheet-head"><div class="icon-box">🐷</div><h3 id="goalSheetTitle">Tambah Target Tabungan</h3></div>
       <div class="field">
         <label>Nama target</label>
         <input type="text" id="gName" placeholder="Contoh: Liburan ke Bali">
@@ -508,7 +517,7 @@
   <!-- ===== Sheet: Transaksi Berulang ===== -->
   <div class="overlay" id="recurOverlay">
     <div class="sheet">
-      <h3 id="recurSheetTitle">Tambah Transaksi Berulang</h3>
+      <div class="sheet-head"><div class="icon-box">🔁</div><h3 id="recurSheetTitle">Tambah Transaksi Berulang</h3></div>
       <div class="type-toggle">
         <button type="button" class="pengeluaran" id="rTypePengeluaran">Pengeluaran</button>
         <button type="button" class="pemasukan" id="rTypePemasukan">Pemasukan</button>

@@ -38,6 +38,9 @@ function toast(msg){
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
+function emptyState(icon, html){
+  return `<div class="empty-state"><div class="eic2">${icon}</div>${html}</div>`;
+}
 
 /* ---------------- Auth ---------------- */
 
@@ -247,7 +250,7 @@ function renderBeranda(){
   const bp = $('budgetPreview');
   bp.innerHTML = '';
   if (!budgets.length){
-    bp.innerHTML = '<div class="empty-state">Belum ada anggaran diatur.</div>';
+    bp.innerHTML = emptyState('📊', 'Belum ada anggaran diatur.');
   } else {
     for (const b of budgets.slice(0, 3)) bp.appendChild(budgetCardEl(b));
   }
@@ -256,7 +259,7 @@ function renderBeranda(){
   rt.innerHTML = '';
   const recent = transactions.slice(0, 5);
   if (!recent.length){
-    rt.innerHTML = '<div class="empty-state">Belum ada transaksi.<br>Tekan tombol + untuk mulai mencatat.</div>';
+    rt.innerHTML = emptyState('🧾', 'Belum ada transaksi.<br>Tekan tombol + untuk mulai mencatat.');
   } else {
     for (const t of recent) rt.appendChild(txRowEl(t));
   }
@@ -269,7 +272,7 @@ function renderTransaksiTab(){
   box.innerHTML = '';
   const mtx = txInMonth();
   if (!mtx.length){
-    box.innerHTML = '<div class="empty-state">Belum ada transaksi bulan ini.<br>Tekan tombol + untuk mulai mencatat.</div>';
+    box.innerHTML = emptyState('🧾', 'Belum ada transaksi bulan ini.<br>Tekan tombol + untuk mulai mencatat.');
     return;
   }
   const groups = {};
@@ -287,7 +290,7 @@ function renderTransaksiTab(){
 function txRowEl(t){
   const row = document.createElement('div');
   row.className = 'tx ' + t.type;
-  const icon = t.type === 'pemasukan' ? '↓' : (t.type === 'transfer' ? '⇄' : '↑');
+  const icon = t.type === 'transfer' ? '⇄' : (CATEGORY_ICONS[t.category] || (t.type === 'pemasukan' ? '↓' : '↑'));
   const sign = t.type === 'pemasukan' ? '+' : (t.type === 'transfer' ? '' : '-');
   const catLabel = t.type === 'transfer'
     ? (accountName(t.account_id) + ' → ' + accountName(t.to_account_id))
@@ -313,11 +316,14 @@ function budgetCardEl(b){
   const el = document.createElement('div');
   el.className = 'prog-card';
   el.innerHTML = `
-    <div class="top">
-      <div><div class="name">${escapeHtml(b.category)}</div><div class="sub">${pct}% terpakai</div></div>
-      <div class="amt">${rupiah(spent)}<br>dari ${rupiah(b.limit_amount)}</div>
+    <div class="icon-box">${CATEGORY_ICONS[b.category] || '📊'}</div>
+    <div class="pc-body">
+      <div class="top">
+        <div><div class="name">${escapeHtml(b.category)}</div><div class="sub">${pct}% terpakai</div></div>
+        <div class="amt">${rupiah(spent)}<br>dari ${rupiah(b.limit_amount)}</div>
+      </div>
+      <div class="prog-bar"><div class="fill ${cls}" style="width:${pct}%"></div></div>
     </div>
-    <div class="prog-bar"><div class="fill ${cls}" style="width:${pct}%"></div></div>
   `;
   el.addEventListener('click', () => openBudgetSheet(b));
   return el;
@@ -327,7 +333,7 @@ function renderAnggaranTab(){
   const box = $('budgetList');
   box.innerHTML = '';
   if (!budgets.length){
-    box.innerHTML = '<div class="empty-state">Belum ada anggaran.<br>Tekan tombol + untuk atur limit per kategori.</div>';
+    box.innerHTML = emptyState('📊', 'Belum ada anggaran.<br>Tekan tombol + untuk atur limit per kategori.');
     return;
   }
   for (const b of budgets) box.appendChild(budgetCardEl(b));
@@ -342,11 +348,14 @@ function goalCardEl(g){
   el.className = 'prog-card';
   const dateLbl = g.target_date ? ('Target: ' + g.target_date) : '';
   el.innerHTML = `
-    <div class="top">
-      <div><div class="name">${escapeHtml(g.name)}</div><div class="sub">${dateLbl}</div></div>
-      <div class="amt">${rupiah(cur)}<br>dari ${rupiah(g.target_amount)}</div>
+    <div class="icon-box">🎯</div>
+    <div class="pc-body">
+      <div class="top">
+        <div><div class="name">${escapeHtml(g.name)}</div><div class="sub">${dateLbl}</div></div>
+        <div class="amt">${rupiah(cur)}<br>dari ${rupiah(g.target_amount)}</div>
+      </div>
+      <div class="prog-bar"><div class="fill" style="width:${pct}%"></div></div>
     </div>
-    <div class="prog-bar"><div class="fill" style="width:${pct}%"></div></div>
   `;
   el.addEventListener('click', () => openGoalSheet(g));
   return el;
@@ -356,7 +365,7 @@ function renderTabunganTab(){
   const box = $('goalList');
   box.innerHTML = '';
   if (!goals.length){
-    box.innerHTML = '<div class="empty-state">Belum ada target tabungan.<br>Tekan tombol + untuk bikin target baru.</div>';
+    box.innerHTML = emptyState('🎯', 'Belum ada target tabungan.<br>Tekan tombol + untuk bikin target baru.');
     return;
   }
   for (const g of goals) box.appendChild(goalCardEl(g));
@@ -368,14 +377,14 @@ function renderAkunTab(){
   const box = $('accountList');
   box.innerHTML = '';
   if (!accounts.length){
-    box.innerHTML = '<div class="empty-state">Belum ada akun.<br>Tekan tombol + untuk tambah akun (Cash, Bank, E-wallet, dll).</div>';
+    box.innerHTML = emptyState('👛', 'Belum ada akun.<br>Tekan tombol + untuk tambah akun (Cash, Bank, E-wallet, dll).');
   } else {
     for (const a of accounts){
       const t = ACCOUNT_TYPES[a.type] || ACCOUNT_TYPES.lainnya;
       const el = document.createElement('div');
       el.className = 'acct-card';
       el.innerHTML = `
-        <div class="ic">${t.icon}</div>
+        <div class="icon-box">${t.icon}</div>
         <div class="mid"><div class="name">${escapeHtml(a.name)}</div><div class="type">${t.label}</div></div>
         <div class="bal">${rupiah(accountBalance(a.id))}</div>
       `;
@@ -387,7 +396,7 @@ function renderAkunTab(){
   const rl = $('recurringList');
   rl.innerHTML = '';
   if (!recurring.length){
-    rl.innerHTML = '<div class="empty-state">Belum ada transaksi berulang.</div>';
+    rl.innerHTML = emptyState('🔁', 'Belum ada transaksi berulang.');
     return;
   }
   for (const r of recurring){
@@ -395,6 +404,7 @@ function renderAkunTab(){
     el.className = 'recur-item' + (r.active ? '' : ' inactive');
     const sign = r.type === 'pemasukan' ? '+' : '-';
     el.innerHTML = `
+      <div class="icon-box">${CATEGORY_ICONS[r.category] || '🔁'}</div>
       <div class="mid">
         <div class="cat">${escapeHtml(r.category)}</div>
         <div class="sub">${accountName(r.account_id)} · tgl ${r.day_of_month} tiap bulan${r.active ? '' : ' · nonaktif'}</div>
