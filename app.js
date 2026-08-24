@@ -757,6 +757,7 @@ $('btnFab').addEventListener('click', () => {
   else if (currentTab === 'akun') openAcctSheet(null);
   else openTxSheet(null);
 });
+$('btnEmptyAddExpense').addEventListener('click', () => openTxSheet(null));
 
 /* ---------------- Boot ---------------- */
 

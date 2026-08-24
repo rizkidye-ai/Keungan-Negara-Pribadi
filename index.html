@@ -7,6 +7,9 @@
 <meta name="theme-color" content="#16A085">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#F4F6F5; --card:#FFFFFF; --ink:#1C2A27; --sub:#6B7A76;
@@ -16,35 +19,82 @@
   }
   *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
   html,body{margin:0; padding:0; background:var(--bg); color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
-  #app{max-width:480px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column;}
+    font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
+  #app{min-height:100vh; display:flex; flex-direction:column;}
 
   /* ---------- Login ---------- */
-  #loginView{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:32px; text-align:center; gap:18px;}
-  #loginView .logo{width:76px; height:76px; border-radius:22px; background:var(--accent);
-    display:flex; align-items:center; justify-content:center; font-size:34px; color:#fff; box-shadow:var(--shadow);}
-  #loginView h1{font-size:22px; margin:0;}
-  #loginView p{color:var(--sub); margin:0; font-size:14px; max-width:300px;}
-  .btn-google{display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--line);
-    border-radius:12px; padding:13px 22px; font-size:15px; font-weight:600; color:var(--ink);
-    cursor:pointer; box-shadow:var(--shadow);}
+  #loginView{flex:1; display:flex; align-items:center; justify-content:center; padding:20px;}
+  .login-card{display:flex; width:100%; max-width:1000px; margin:0 auto; background:var(--card);
+    border-radius:28px; overflow:hidden; box-shadow:0 20px 50px rgba(20,40,35,.12);}
+  .login-illustration{flex:1; background:linear-gradient(150deg,var(--accent),var(--accent-dk));
+    color:#fff; padding:44px 40px; display:flex; flex-direction:column; justify-content:center;
+    gap:28px; position:relative; overflow:hidden; min-height:520px;}
+  .login-illustration::before{content:''; position:absolute; width:280px; height:280px; border-radius:50%;
+    background:rgba(255,255,255,.08); top:-90px; right:-90px;}
+  .login-illustration::after{content:''; position:absolute; width:200px; height:200px; border-radius:50%;
+    background:rgba(255,255,255,.06); bottom:-70px; left:-50px;}
+  .login-brand{display:flex; align-items:center; gap:12px; position:relative; z-index:1;}
+  .login-brand .badge{width:44px; height:44px; border-radius:13px; background:rgba(255,255,255,.18);
+    display:flex; align-items:center; justify-content:center; font-size:22px;}
+  .login-brand .name{font-size:17px; font-weight:800;}
+  .login-brand .tag{font-size:12px; opacity:.85; margin-top:1px;}
+  .login-phone{position:relative; z-index:1; background:rgba(255,255,255,.97); color:var(--ink);
+    border-radius:18px; padding:16px; box-shadow:0 16px 32px rgba(0,0,0,.18); max-width:280px;}
+  .login-phone .plbl{font-size:11px; color:var(--sub);}
+  .login-phone .pval{font-size:20px; font-weight:800; margin-top:2px;}
+  .login-phone .prow{display:flex; gap:10px; margin-top:12px; padding-top:12px; border-top:1px solid var(--line);}
+  .login-phone .prow > div{flex:1;}
+  .login-phone .prow .plbl2{font-size:10px; color:var(--sub);}
+  .login-phone .prow .pval2{font-size:13px; font-weight:700; margin-top:1px;}
+  .login-phone .prow .in .pval2{color:var(--in);} .login-phone .prow .out .pval2{color:var(--out);}
+  .login-badges{display:flex; flex-wrap:wrap; gap:8px; position:relative; z-index:1;}
+  .login-badges span{background:rgba(255,255,255,.14); border-radius:20px; padding:6px 12px; font-size:11px; font-weight:600;}
+  .login-form-panel{flex:1; padding:48px 44px; display:flex; flex-direction:column; justify-content:center;}
+  .login-form-panel .logo{width:56px; height:56px; border-radius:16px; background:var(--accent);
+    display:flex; align-items:center; justify-content:center; font-size:26px; color:#fff; margin-bottom:18px;}
+  .login-form-panel h1{font-size:23px; margin:0 0 6px;}
+  .login-form-panel p{color:var(--sub); margin:0 0 24px; font-size:14px; max-width:320px;}
+  .btn-google{display:flex; align-items:center; justify-content:center; gap:10px; background:#fff; border:1px solid var(--line);
+    border-radius:14px; padding:14px 22px; font-size:15px; font-weight:700; color:var(--ink);
+    cursor:pointer; box-shadow:var(--shadow); width:100%; max-width:340px;}
   .btn-google svg{width:20px; height:20px;}
+  .login-divider{display:flex; align-items:center; gap:12px; color:var(--sub); font-size:12px;
+    margin:20px 0; max-width:340px;}
+  .login-divider::before, .login-divider::after{content:''; flex:1; height:1px; background:var(--line);}
+  .login-features{display:flex; flex-direction:column; gap:14px; max-width:340px;}
+  .login-features .feat{display:flex; gap:12px; align-items:flex-start;}
+  .login-features .fic{width:34px; height:34px; border-radius:10px; background:#EEF6F3; color:var(--accent-dk);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:15px;}
+  .login-features .ft{font-size:13px; font-weight:700;}
+  .login-features .fd{font-size:12px; color:var(--sub); margin-top:1px;}
+  @media (max-width:860px){
+    #loginView{padding:0; align-items:stretch;}
+    .login-card{border-radius:0; box-shadow:none; min-height:100vh;}
+    .login-illustration{display:none;}
+    .login-form-panel{padding:40px 24px; justify-content:flex-start; padding-top:56px;}
+  }
 
   /* ---------- Header ---------- */
-  header{position:sticky; top:0; z-index:10; background:var(--accent); color:#fff; padding:14px 16px 20px;}
-  header .row{display:flex; align-items:center; justify-content:space-between;}
-  header .who{display:flex; align-items:center; gap:8px; font-size:13px; opacity:.92;}
-  header .who img{width:26px; height:26px; border-radius:50%; border:1px solid rgba(255,255,255,.6);}
-  header .logout{background:rgba(255,255,255,.18); border:none; color:#fff; border-radius:8px;
-    padding:6px 10px; font-size:12px; cursor:pointer;}
-  header h2{margin:14px 0 0; font-size:15px; font-weight:600; opacity:.95;}
-  .month-nav{display:flex; align-items:center; gap:10px; margin-top:10px;}
+  header{position:relative; z-index:10; background:linear-gradient(135deg,var(--accent),var(--accent-dk));
+    color:#fff; padding:18px 16px 22px; overflow:hidden;}
+  header::before{content:''; position:absolute; width:150px; height:150px; border-radius:50%;
+    background:rgba(255,255,255,.07); top:-60px; right:-40px; pointer-events:none;}
+  header .row{display:flex; align-items:center; justify-content:space-between; position:relative; z-index:1;}
+  header .who{display:flex; align-items:center; gap:10px;}
+  header .who img{width:42px; height:42px; border-radius:50%; border:2px solid rgba(255,255,255,.55); object-fit:cover;}
+  header .who .wname{font-size:14px; font-weight:700;}
+  header .who .wgreet{font-size:12px; opacity:.85; margin-top:1px;}
+  header .logout{display:flex; align-items:center; gap:5px; background:rgba(255,255,255,.16); border:none; color:#fff;
+    border-radius:20px; padding:8px 14px; font-size:12px; font-weight:600; cursor:pointer;}
+  header h2{margin:16px 0 0; font-size:16px; font-weight:800; position:relative; z-index:1;}
+  .month-nav{display:flex; align-items:center; gap:10px; margin-top:12px; position:relative; z-index:1;}
   .month-nav button{background:rgba(255,255,255,.18); border:none; color:#fff; width:30px; height:30px;
-    border-radius:8px; font-size:16px; cursor:pointer;}
-  .month-nav .label{font-size:18px; font-weight:700; flex:1; text-align:center;}
+    border-radius:9px; font-size:16px; cursor:pointer;}
+  .month-nav .label{display:flex; align-items:center; justify-content:center; gap:7px;
+    font-size:16px; font-weight:700; flex:1;}
 
-  main{flex:1; padding:14px 14px 100px;}
+  main{flex:1; padding:14px 14px 100px; max-width:480px; margin:0 auto; width:100%;}
+  #mainView{max-width:480px; margin:0 auto; width:100%;}
   .tab-view{display:none;}
   .tab-view.active{display:block;}
 
@@ -53,20 +103,39 @@
   .card + .card{margin-top:14px;}
   .card h3{margin:0 0 10px; font-size:13px; color:var(--sub); font-weight:600;}
 
-  .summary{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
-  .summary .saldo{grid-column:1/3; text-align:center; padding-bottom:10px; border-bottom:1px solid var(--line);}
+  .pill-btn{background:#EEF6F3; color:var(--accent-dk); border:none; border-radius:20px; padding:7px 13px;
+    font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px;}
+
+  .summary .head-row{display:flex; align-items:center; justify-content:space-between; margin-bottom:2px;}
+  .summary .saldo{padding-bottom:12px; border-bottom:1px solid var(--line); margin-bottom:12px;}
   .summary .saldo .lbl{font-size:12px; color:var(--sub);}
-  .summary .saldo .val{font-size:26px; font-weight:800; margin-top:2px;}
-  .summary .stat{text-align:center;}
+  .summary .saldo .val{font-size:28px; font-weight:800; margin-top:4px;}
+  .summary .stats-row{display:flex; align-items:stretch;}
+  .summary .stat{flex:1; display:flex; align-items:center; gap:10px;}
+  .summary .stat .ic{width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0;}
+  .summary .stat.inn .ic{background:#E5F7EF; color:var(--in);}
+  .summary .stat.out .ic{background:#FBEAE5; color:var(--out);}
   .summary .stat .lbl{font-size:11px; color:var(--sub); text-transform:uppercase; letter-spacing:.03em;}
-  .summary .stat .val{font-size:16px; font-weight:700; margin-top:3px;}
+  .summary .stat .val{font-size:15px; font-weight:800; margin-top:2px;}
   .stat.inn .val{color:var(--in);} .stat.out .val{color:var(--out);}
+  .summary .stat-divider{width:1px; background:var(--line); margin:0 14px;}
 
-  .total-saldo{text-align:center;}
+  .total-saldo{display:flex; align-items:center; gap:14px; position:relative; overflow:hidden;}
+  .total-saldo .ic{width:52px; height:52px; border-radius:14px; background:#EEF6F3; color:var(--accent-dk);
+    display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;}
   .total-saldo .lbl{font-size:12px; color:var(--sub);}
-  .total-saldo .val{font-size:30px; font-weight:800; margin-top:4px;}
+  .total-saldo .val{font-size:24px; font-weight:800; margin-top:3px;}
+  .total-saldo::after{content:''; position:absolute; right:-10px; top:-10px; width:90px; height:90px; border-radius:50%;
+    background-image:radial-gradient(var(--line) 1.5px, transparent 1.5px); background-size:11px 11px; opacity:.6;}
 
-  .chart-empty{text-align:center; color:var(--sub); font-size:13px; padding:20px 0;}
+  .chart-empty{display:flex; align-items:center; gap:14px; padding:6px 0;}
+  .chart-empty .eic{width:52px; height:52px; border-radius:14px; background:#EEF6F3; color:var(--accent-dk);
+    display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;}
+  .chart-empty .etxt{flex:1;}
+  .chart-empty .etitle{font-size:13px; font-weight:700; color:var(--ink);}
+  .chart-empty .esub{font-size:12px; color:var(--sub); margin-top:2px;}
+  .chart-empty .efab{width:38px; height:38px; border-radius:50%; background:var(--accent); color:#fff;
+    border:none; font-size:19px; cursor:pointer; flex-shrink:0;}
 
   .list-head{display:flex; align-items:center; justify-content:space-between; margin:18px 2px 8px;}
   .list-head h3{margin:0; font-size:13px; color:var(--sub); font-weight:600;}
@@ -129,10 +198,12 @@
   .tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; background:var(--card);
     border-top:1px solid var(--line); display:flex; max-width:480px; margin:0 auto;
     padding-bottom:env(safe-area-inset-bottom,0px);}
-  .tabbar button{flex:1; background:none; border:none; padding:9px 4px 8px; display:flex; flex-direction:column;
-    align-items:center; gap:2px; color:var(--sub); font-size:10px; font-weight:600; cursor:pointer;}
-  .tabbar button .ic{font-size:19px;}
+  .tabbar button{flex:1; background:none; border:none; padding:8px 4px; display:flex; flex-direction:column;
+    align-items:center; gap:3px; color:var(--sub); font-size:10px; font-weight:600; cursor:pointer;}
+  .tabbar button .ic{font-size:17px; width:40px; height:26px; border-radius:13px; display:flex;
+    align-items:center; justify-content:center; transition:background .2s;}
   .tabbar button.active{color:var(--accent-dk);}
+  .tabbar button.active .ic{background:#E5F7EF;}
 
   /* ---------- Modal ---------- */
   .overlay{position:fixed; inset:0; background:rgba(10,20,18,.45); z-index:30; display:none;
@@ -174,14 +245,46 @@
 
   <!-- ===== Login ===== -->
   <div id="loginView">
-    <div class="logo">💰</div>
-    <h1>Keuangan TMRIZK</h1>
-    <p>Kelola uangmu: akun, pemasukan, pengeluaran, anggaran, sampai target tabungan. Login pakai akun Google — datamu privat, hanya kamu yang bisa lihat.</p>
-    <button class="btn-google" id="btnGoogleLogin">
-      <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6 29.6 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.1-5.1l-6.5-5.5C29.6 35.4 26.9 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.6 5.1C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4.1 5.6l6.5 5.5C39.9 37 44 31 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
-      Login dengan Google
-    </button>
-    <p id="loginError" class="hidden" style="color:var(--danger); font-size:12px;"></p>
+    <div class="login-card">
+      <div class="login-illustration">
+        <div class="login-brand">
+          <div class="badge">💰</div>
+          <div>
+            <div class="name">Keuangan TMRIZK</div>
+            <div class="tag">Kelola keuanganmu dengan mudah</div>
+          </div>
+        </div>
+        <div class="login-phone">
+          <div class="plbl">Total Saldo</div>
+          <div class="pval">Rp24.500.000</div>
+          <div class="prow">
+            <div class="in"><div class="plbl2">Pemasukan</div><div class="pval2">Rp32.000.000</div></div>
+            <div class="out"><div class="plbl2">Pengeluaran</div><div class="pval2">Rp7.500.000</div></div>
+          </div>
+        </div>
+        <div class="login-badges">
+          <span>🔒 Aman &amp; Privasi</span>
+          <span>☁️ Data Tersimpan Aman</span>
+          <span>📈 Pantau Keuangan</span>
+        </div>
+      </div>
+      <div class="login-form-panel">
+        <div class="logo">💰</div>
+        <h1>Selamat datang kembali!</h1>
+        <p>Login untuk melanjutkan ke akun kamu — kelola akun, pemasukan, pengeluaran, anggaran, sampai target tabungan.</p>
+        <button class="btn-google" id="btnGoogleLogin">
+          <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6 29.6 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.1-5.1l-6.5-5.5C29.6 35.4 26.9 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.6 5.1C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4.1 5.6l6.5 5.5C39.9 37 44 31 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
+          Login dengan Google
+        </button>
+        <p id="loginError" class="hidden" style="color:var(--danger); font-size:12px; margin-top:10px;"></p>
+        <div class="login-divider">atau</div>
+        <div class="login-features">
+          <div class="feat"><div class="fic">🔒</div><div><div class="ft">Aman &amp; Terpercaya</div><div class="fd">Akun Google kamu aman, kami tidak akan akses datanya.</div></div></div>
+          <div class="feat"><div class="fic">⚡</div><div><div class="ft">Cepat &amp; Praktis</div><div class="fd">Login sekali, akses semua fitur tanpa repot.</div></div></div>
+          <div class="feat"><div class="fic">🔄</div><div><div class="ft">Sinkron di Semua Perangkat</div><div class="fd">Data keuanganmu selalu tersedia di mana saja.</div></div></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ===== Main app ===== -->
@@ -190,14 +293,17 @@
       <div class="row">
         <div class="who">
           <img id="userAvatar" src="" alt="">
-          <span id="userName">-</span>
+          <div>
+            <div class="wname" id="userName">-</div>
+            <div class="wgreet">Selamat datang kembali 👋</div>
+          </div>
         </div>
-        <button class="logout" id="btnLogout">Keluar</button>
+        <button class="logout" id="btnLogout"><span>↪</span>Keluar</button>
       </div>
       <h2 id="headerTitle">Beranda</h2>
       <div class="month-nav hidden" id="monthNavWrap">
         <button id="prevMonth">‹</button>
-        <div class="label" id="monthLabel">-</div>
+        <div class="label"><span>📅</span><span id="monthLabel">-</span></div>
         <button id="nextMonth">›</button>
       </div>
     </header>
@@ -207,21 +313,34 @@
       <!-- ===== Beranda ===== -->
       <div class="tab-view" data-tab="beranda">
         <div class="card total-saldo">
-          <div class="lbl">Total saldo semua akun</div>
-          <div class="val" id="totalSaldo">Rp0</div>
+          <div class="ic">👛</div>
+          <div>
+            <div class="lbl">Total saldo semua akun</div>
+            <div class="val" id="totalSaldo">Rp0</div>
+          </div>
         </div>
         <div class="card summary">
           <div class="saldo">
-            <div class="lbl">Arus kas bulan ini</div>
+            <div class="head-row"><div class="lbl">Arus kas bulan ini</div><button class="pill-btn" data-goto="transaksi">📈 Ringkasan</button></div>
             <div class="val" id="sumSaldo">Rp0</div>
           </div>
-          <div class="stat inn"><div class="lbl">Pemasukan</div><div class="val" id="sumIn">Rp0</div></div>
-          <div class="stat out"><div class="lbl">Pengeluaran</div><div class="val" id="sumOut">Rp0</div></div>
+          <div class="stats-row">
+            <div class="stat inn"><div class="ic">↓</div><div><div class="lbl">Pemasukan</div><div class="val" id="sumIn">Rp0</div></div></div>
+            <div class="stat-divider"></div>
+            <div class="stat out"><div class="ic">↑</div><div><div class="lbl">Pengeluaran</div><div class="val" id="sumOut">Rp0</div></div></div>
+          </div>
         </div>
         <div class="card">
           <h3>Pengeluaran per kategori</h3>
           <canvas id="catChart" height="180"></canvas>
-          <div id="catChartEmpty" class="chart-empty hidden">Belum ada pengeluaran bulan ini</div>
+          <div id="catChartEmpty" class="chart-empty hidden">
+            <div class="eic">🧾</div>
+            <div class="etxt">
+              <div class="etitle">Belum ada pengeluaran bulan ini</div>
+              <div class="esub">Catat pengeluaran untuk melihat ringkasan per kategori.</div>
+            </div>
+            <button class="efab" id="btnEmptyAddExpense">+</button>
+          </div>
         </div>
         <div class="list-head"><h3>Anggaran</h3><button class="link" data-goto="anggaran">Lihat semua</button></div>
         <div id="budgetPreview"></div>
