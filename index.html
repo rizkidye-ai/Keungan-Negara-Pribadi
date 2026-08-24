@@ -34,36 +34,60 @@
   .login-card{display:flex; width:100%; max-width:1120px; min-height:640px; margin:0 auto; background:var(--card);
     border-radius:var(--r-xl); overflow:hidden; box-shadow:var(--shadow-lg);}
   .login-illustration{flex:1; background:linear-gradient(145deg,#075B4B 0%,#0F8F78 55%,#08715F 100%);
-    color:#fff; padding:48px 44px; display:flex; flex-direction:column; justify-content:space-between;
-    gap:32px; position:relative; overflow:hidden;}
+    color:#fff; padding:40px 40px 0; display:flex; flex-direction:column; justify-content:center; gap:8px;
+    position:relative; overflow:hidden;}
   .login-illustration::before{content:''; position:absolute; width:280px; height:280px; border-radius:50%;
     background:rgba(255,255,255,.07); top:-90px; right:-90px;}
   .login-illustration::after{content:''; position:absolute; width:200px; height:200px; border-radius:50%;
     background:rgba(255,255,255,.05); bottom:-70px; left:-50px;}
-  .login-brand{display:flex; align-items:center; gap:14px; position:relative; z-index:1;}
+  .login-brand{display:flex; align-items:center; gap:14px; position:relative; z-index:2;}
   .login-brand .badge{width:48px; height:48px; border-radius:var(--r-icon); background:rgba(255,255,255,.18);
     display:flex; align-items:center; justify-content:center; padding:11px; flex-shrink:0;}
   .login-brand .name{font-size:19px; font-weight:800;}
   .login-brand .tag{font-size:13px; opacity:.85; margin-top:2px;}
-  .login-phone-wrap{position:relative; z-index:1; display:flex; justify-content:center; padding:8px 0;}
-  .login-phone{background:rgba(255,255,255,.98); color:var(--ink);
-    border-radius:32px; padding:20px; box-shadow:0 30px 60px rgba(0,0,0,.25); max-width:270px; width:100%;
-    transform:rotate(-4deg); animation:phoneIn .5s ease-out;}
-  .login-phone .pmonth{font-size:11px; color:var(--sub); display:flex; align-items:center; gap:5px;}
-  .login-phone .pmonth svg{width:12px; height:12px;}
-  .login-phone .plbl{font-size:11px; color:var(--sub); margin-top:10px;}
-  .login-phone .pval{font-size:21px; font-weight:800; margin-top:2px;}
-  .login-phone .prow{display:flex; gap:10px; margin-top:12px; padding-top:12px; border-top:1px solid var(--line);}
-  .login-phone .prow > div{flex:1;}
-  .login-phone .prow .plbl2{font-size:10px; color:var(--sub);}
-  .login-phone .prow .pval2{font-size:13px; font-weight:700; margin-top:1px;}
-  .login-phone .prow .in .pval2{color:var(--in);} .login-phone .prow .out .pval2{color:var(--out);}
-  .login-badges{display:flex; flex-wrap:wrap; gap:8px; position:relative; z-index:1;}
-  .login-badges span{background:rgba(255,255,255,.14); border-radius:20px; padding:7px 13px; font-size:12px;
-    font-weight:600; display:flex; align-items:center; gap:6px;}
-  .login-badges svg{width:13px; height:13px;}
-  @keyframes phoneIn{from{opacity:0; transform:rotate(-4deg) translateY(14px);} to{opacity:1; transform:rotate(-4deg) translateY(0);}}
+
+  /* ---- illustrated scene: phone + wallet + coins ---- */
+  .illus-stage{position:relative; height:420px; margin-top:10px;}
+  .illus-wallet{position:absolute; left:2%; bottom:6px; width:150px; height:150px; z-index:1;}
+  .illus-leaf{position:absolute; left:-16px; bottom:-16px; width:130px; height:130px; opacity:.55; z-index:0;}
+  .illus-phone{position:absolute; right:6%; bottom:0; width:220px; z-index:2;
+    animation:phoneIn .5s ease-out;}
+  .illus-phone .frame{background:#0B241D; border-radius:34px; padding:9px; box-shadow:0 30px 60px rgba(0,0,0,.3);
+    transform:rotate(-3deg);}
+  .illus-phone .screen{background:#fff; border-radius:26px; padding:16px 14px 18px; color:var(--ink); position:relative;}
+  .illus-phone .s-head{display:flex; justify-content:space-between; align-items:center;}
+  .illus-phone .s-head .t{font-size:13px; font-weight:700;}
+  .illus-phone .bell{width:24px; height:24px; border-radius:50%; background:#F1F5F3; display:flex;
+    align-items:center; justify-content:center; color:var(--sub); flex-shrink:0; padding:6px;}
+  .illus-phone .month-row{display:flex; align-items:center; gap:4px; font-size:11px; color:var(--sub); margin-top:10px;}
+  .illus-phone .month-row svg{width:11px; height:11px;}
+  .illus-phone .bal-card{background:#F7FAF9; border-radius:14px; padding:12px 14px; margin-top:10px;}
+  .illus-phone .bal-card .plbl{font-size:11px; color:var(--sub);}
+  .illus-phone .bal-card .pval{font-size:20px; font-weight:800; margin-top:2px;}
+  .illus-phone .prow{display:flex; justify-content:space-between; align-items:center; margin-top:11px;
+    padding-top:11px; border-top:1px solid var(--line); font-size:11px; color:var(--sub);}
+  .illus-phone .prow .pval2{font-size:13px; font-weight:700; color:var(--ink); margin-top:2px;}
+  .illus-phone .prow .in .pval2{color:var(--in);} .illus-phone .prow .out .pval2{color:var(--out);}
+  .illus-donut-card{position:absolute; left:-22px; bottom:8px; width:172px; background:#fff; border-radius:16px;
+    padding:12px 14px; box-shadow:0 16px 30px rgba(0,0,0,.18); z-index:3;}
+  .illus-donut-card .dt{font-size:11px; font-weight:700; color:var(--ink); margin-bottom:10px;}
+  .illus-donut-card .drow{display:flex; align-items:center; gap:12px;}
+  .illus-donut{width:52px; height:52px; border-radius:50%; flex-shrink:0;
+    background:conic-gradient(#0F8F78 0% 40%, #4A90D9 40% 65%, #F2B134 65% 80%, #B7C4C0 80% 100%);
+    position:relative;}
+  .illus-donut::after{content:''; position:absolute; inset:9px; background:#fff; border-radius:50%;}
+  .illus-legend{font-size:10px; color:var(--sub); display:flex; flex-direction:column; gap:4px;}
+  .illus-legend .lg-row{display:flex; align-items:center; gap:5px;}
+  .illus-legend .dot{width:6px; height:6px; border-radius:50%; flex-shrink:0;}
+  @keyframes phoneIn{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);}}
   @keyframes fadeIn{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);}}
+
+  .login-badges{display:flex; justify-content:space-between; gap:10px; position:relative; z-index:2;
+    padding:22px 4px 24px;}
+  .login-badges .lb-item{display:flex; flex-direction:column; align-items:center; text-align:center; gap:8px; flex:1;}
+  .login-badges .lb-ic{width:40px; height:40px; border-radius:12px; background:rgba(255,255,255,.16);
+    display:flex; align-items:center; justify-content:center; padding:9px; flex-shrink:0;}
+  .login-badges .lb-txt{font-size:11.5px; font-weight:600; line-height:1.3;}
 
   .login-form-panel{flex:1; padding:64px 72px; display:flex; flex-direction:column; justify-content:center;
     animation:fadeIn .45s ease-out;}
@@ -306,30 +330,84 @@
   <div id="loginView">
     <div class="login-card">
       <div class="login-illustration">
-        <div>
-          <div class="login-brand">
-            <div class="badge" data-icon="wallet"></div>
-            <div>
-              <div class="name">Keuangan TMRIZK</div>
-              <div class="tag">Kelola keuanganmu dengan mudah</div>
-            </div>
+        <div class="login-brand">
+          <div class="badge" data-icon="wallet"></div>
+          <div>
+            <div class="name">Keuangan TMRIZK</div>
+            <div class="tag">Kelola keuanganmu dengan mudah</div>
           </div>
-          <div class="login-phone-wrap">
-            <div class="login-phone">
-              <div class="pmonth"><span data-icon="calendar" style="width:12px;height:12px;"></span> Agustus 2026</div>
-              <div class="plbl">Total Saldo</div>
-              <div class="pval">Rp24.500.000</div>
-              <div class="prow">
-                <div class="in"><div class="plbl2">Pemasukan</div><div class="pval2">Rp32.000.000</div></div>
-                <div class="out"><div class="plbl2">Pengeluaran</div><div class="pval2">Rp7.500.000</div></div>
+        </div>
+
+        <div class="illus-stage">
+          <svg class="illus-leaf" viewBox="0 0 120 160" fill="none">
+            <path d="M60 150C20 130 8 80 30 30 70 45 95 85 78 135 74 145 66 149 60 150Z" fill="#0A4F3D"/>
+            <path d="M60 148C40 110 38 65 34 34" stroke="#0F8F78" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+
+          <svg class="illus-wallet" viewBox="0 0 160 160" fill="none">
+            <defs>
+              <linearGradient id="gWallet" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#12876A"/><stop offset="1" stop-color="#094B3B"/>
+              </linearGradient>
+              <linearGradient id="gFlap" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#1AA084"/><stop offset="1" stop-color="#0E6B54"/>
+              </linearGradient>
+              <linearGradient id="gCash1" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#9FE8C2"/><stop offset="1" stop-color="#6BD4A0"/>
+              </linearGradient>
+              <linearGradient id="gCash2" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0" stop-color="#7FDCAF"/><stop offset="1" stop-color="#4FC98F"/>
+              </linearGradient>
+              <radialGradient id="gCoin" cx=".35" cy=".3" r=".8">
+                <stop offset="0" stop-color="#FFE9A3"/><stop offset="1" stop-color="#E8B923"/>
+              </radialGradient>
+            </defs>
+            <rect x="30" y="16" width="56" height="26" rx="4" fill="url(#gCash2)" transform="rotate(-14 58 29)"/>
+            <rect x="42" y="10" width="56" height="26" rx="4" fill="url(#gCash1)" transform="rotate(-5 70 23)"/>
+            <line x1="46" y1="18" x2="92" y2="14" stroke="#fff" stroke-opacity=".5" stroke-width="1.5" transform="rotate(-5 70 23)"/>
+            <circle cx="112" cy="112" r="21" fill="url(#gCoin)"/>
+            <circle cx="128" cy="98" r="21" fill="url(#gCoin)"/>
+            <text x="128" y="103" font-size="13" font-weight="700" fill="#9A6B0E" text-anchor="middle">Rp</text>
+            <rect x="14" y="58" width="100" height="70" rx="15" fill="url(#gWallet)"/>
+            <rect x="14" y="40" width="100" height="28" rx="14" fill="url(#gFlap)"/>
+            <circle cx="64" cy="54" r="5" fill="#F4C542"/>
+          </svg>
+
+          <div class="illus-phone">
+            <div class="frame">
+              <div class="screen">
+                <div class="s-head">
+                  <div class="t">Ringkasan</div>
+                  <div class="bell"><span data-icon="bell"></span></div>
+                </div>
+                <div class="month-row"><span data-icon="calendar"></span> Agustus 2026 <span data-icon="chevron-down"></span></div>
+                <div class="bal-card">
+                  <div class="plbl">Total Saldo</div>
+                  <div class="pval">Rp24.500.000</div>
+                  <div class="prow in"><span>Pemasukan</span><span class="pval2">Rp32.000.000</span></div>
+                  <div class="prow out"><span>Pengeluaran</span><span class="pval2">Rp7.500.000</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="illus-donut-card">
+              <div class="dt">Pengeluaran per kategori</div>
+              <div class="drow">
+                <div class="illus-donut"></div>
+                <div class="illus-legend">
+                  <div class="lg-row"><span class="dot" style="background:#0F8F78"></span>Makanan 40%</div>
+                  <div class="lg-row"><span class="dot" style="background:#4A90D9"></span>Transportasi 25%</div>
+                  <div class="lg-row"><span class="dot" style="background:#F2B134"></span>Belanja 15%</div>
+                  <div class="lg-row"><span class="dot" style="background:#B7C4C0"></span>Lainnya 20%</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
+
         <div class="login-badges">
-          <span><span data-icon="shield"></span>Aman &amp; Privasi</span>
-          <span><span data-icon="cloud"></span>Data Tersimpan</span>
-          <span><span data-icon="trending-up"></span>Pantau Keuangan</span>
+          <div class="lb-item"><div class="lb-ic" data-icon="shield"></div><div class="lb-txt">Aman &amp; Privasi<br>Terlindungi</div></div>
+          <div class="lb-item"><div class="lb-ic" data-icon="cloud"></div><div class="lb-txt">Data Tersimpan<br>Dengan Aman</div></div>
+          <div class="lb-item"><div class="lb-ic" data-icon="bar-chart"></div><div class="lb-txt">Pantau Keuangan<br>Lebih Mudah</div></div>
         </div>
       </div>
       <div class="login-form-panel">

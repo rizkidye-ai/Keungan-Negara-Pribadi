@@ -36,7 +36,9 @@ const ICON_PATHS = {
   banknote: '<rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><line x1="6" y1="10" x2="6" y2="10.01"/><line x1="18" y1="14" x2="18" y2="14.01"/>',
   'clipboard-list': '<rect x="5.5" y="4" width="13" height="17.5" rx="2"/><rect x="9" y="2" width="6" height="4" rx="1"/><line x1="8.5" y1="11.5" x2="15.5" y2="11.5"/><line x1="8.5" y1="15" x2="15.5" y2="15"/><line x1="8.5" y1="18.5" x2="12.5" y2="18.5"/>',
   x: '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
-  'piggy-bank': '<path d="M4.5 12.5c0-3.5 3.2-6.3 7.2-6.3 2.6 0 4.9 1.2 6.2 3h1.6a1 1 0 0 1 1 1v2.3a1 1 0 0 1-1 1h-1.1"/><path d="M4.5 12.5v3.3a1 1 0 0 0 1 1H6l.6 2.2h2.1l.4-1.5h4l.4 1.5h2.1l.6-2.2v-1.3"/><circle cx="15" cy="10.5" r=".4" fill="currentColor" stroke="none"/><line x1="8" y1="6.6" x2="7" y2="4.5"/>'
+  'piggy-bank': '<path d="M4.5 12.5c0-3.5 3.2-6.3 7.2-6.3 2.6 0 4.9 1.2 6.2 3h1.6a1 1 0 0 1 1 1v2.3a1 1 0 0 1-1 1h-1.1"/><path d="M4.5 12.5v3.3a1 1 0 0 0 1 1H6l.6 2.2h2.1l.4-1.5h4l.4 1.5h2.1l.6-2.2v-1.3"/><circle cx="15" cy="10.5" r=".4" fill="currentColor" stroke="none"/><line x1="8" y1="6.6" x2="7" y2="4.5"/>',
+  bell: '<path d="M7.5 15V10.5a4.5 4.5 0 0 1 9 0V15l1.8 2H5.7l1.8-2Z"/><path d="M10.3 19.5a1.8 1.8 0 0 0 3.4 0"/>',
+  'chevron-down': '<polyline points="6 9 12 15 18 9"/>'
 };
 
 function icon(name, cls){
