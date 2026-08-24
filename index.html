@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Keuangan TMRIZK</title>
+<meta name="theme-color" content="#16A085">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="data:,">
+<style>
+  :root{
+    --bg:#F4F6F5; --card:#FFFFFF; --ink:#1C2A27; --sub:#6B7A76;
+    --line:#E4E9E7; --accent:#16A085; --accent-dk:#0E7C63;
+    --in:#1FA97C; --out:#E4572E; --danger:#D64545; --warn:#E0A800;
+    --radius:14px; --shadow:0 2px 10px rgba(20,40,35,.06);
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; padding:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;}
+  #app{max-width:480px; margin:0 auto; min-height:100vh; display:flex; flex-direction:column;}
+
+  /* ---------- Login ---------- */
+  #loginView{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:32px; text-align:center; gap:18px;}
+  #loginView .logo{width:76px; height:76px; border-radius:22px; background:var(--accent);
+    display:flex; align-items:center; justify-content:center; font-size:34px; color:#fff; box-shadow:var(--shadow);}
+  #loginView h1{font-size:22px; margin:0;}
+  #loginView p{color:var(--sub); margin:0; font-size:14px; max-width:300px;}
+  .btn-google{display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--line);
+    border-radius:12px; padding:13px 22px; font-size:15px; font-weight:600; color:var(--ink);
+    cursor:pointer; box-shadow:var(--shadow);}
+  .btn-google svg{width:20px; height:20px;}
+
+  /* ---------- Header ---------- */
+  header{position:sticky; top:0; z-index:10; background:var(--accent); color:#fff; padding:14px 16px 20px;}
+  header .row{display:flex; align-items:center; justify-content:space-between;}
+  header .who{display:flex; align-items:center; gap:8px; font-size:13px; opacity:.92;}
+  header .who img{width:26px; height:26px; border-radius:50%; border:1px solid rgba(255,255,255,.6);}
+  header .logout{background:rgba(255,255,255,.18); border:none; color:#fff; border-radius:8px;
+    padding:6px 10px; font-size:12px; cursor:pointer;}
+  header h2{margin:14px 0 0; font-size:15px; font-weight:600; opacity:.95;}
+  .month-nav{display:flex; align-items:center; gap:10px; margin-top:10px;}
+  .month-nav button{background:rgba(255,255,255,.18); border:none; color:#fff; width:30px; height:30px;
+    border-radius:8px; font-size:16px; cursor:pointer;}
+  .month-nav .label{font-size:18px; font-weight:700; flex:1; text-align:center;}
+
+  main{flex:1; padding:14px 14px 100px;}
+  .tab-view{display:none;}
+  .tab-view.active{display:block;}
+
+  /* ---------- Cards ---------- */
+  .card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px;}
+  .card + .card{margin-top:14px;}
+  .card h3{margin:0 0 10px; font-size:13px; color:var(--sub); font-weight:600;}
+
+  .summary{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .summary .saldo{grid-column:1/3; text-align:center; padding-bottom:10px; border-bottom:1px solid var(--line);}
+  .summary .saldo .lbl{font-size:12px; color:var(--sub);}
+  .summary .saldo .val{font-size:26px; font-weight:800; margin-top:2px;}
+  .summary .stat{text-align:center;}
+  .summary .stat .lbl{font-size:11px; color:var(--sub); text-transform:uppercase; letter-spacing:.03em;}
+  .summary .stat .val{font-size:16px; font-weight:700; margin-top:3px;}
+  .stat.inn .val{color:var(--in);} .stat.out .val{color:var(--out);}
+
+  .total-saldo{text-align:center;}
+  .total-saldo .lbl{font-size:12px; color:var(--sub);}
+  .total-saldo .val{font-size:30px; font-weight:800; margin-top:4px;}
+
+  .chart-empty{text-align:center; color:var(--sub); font-size:13px; padding:20px 0;}
+
+  .list-head{display:flex; align-items:center; justify-content:space-between; margin:18px 2px 8px;}
+  .list-head h3{margin:0; font-size:13px; color:var(--sub); font-weight:600;}
+  .list-head .link{font-size:12px; color:var(--accent); font-weight:600; cursor:pointer; background:none; border:none;}
+  .day-lbl{font-size:12px; color:var(--sub); margin:10px 2px 6px;}
+  .tx{background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:12px 14px;
+    display:flex; align-items:center; gap:12px; margin-bottom:8px; cursor:pointer;}
+  .tx .icon{width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    font-size:17px; flex-shrink:0;}
+  .tx.pemasukan .icon{background:#E5F7EF; color:var(--in);}
+  .tx.pengeluaran .icon{background:#FBEAE5; color:var(--out);}
+  .tx.transfer .icon{background:#EAF1FB; color:#4A6FA5;}
+  .tx .mid{flex:1; min-width:0;}
+  .tx .cat{font-size:14px; font-weight:600;}
+  .tx .note{font-size:12px; color:var(--sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .tx .amt{font-size:14px; font-weight:700; white-space:nowrap;}
+  .tx.pemasukan .amt{color:var(--in);} .tx.pengeluaran .amt{color:var(--out);} .tx.transfer .amt{color:#4A6FA5;}
+  .empty-state{text-align:center; color:var(--sub); font-size:13px; padding:40px 10px;}
+
+  /* ---------- Budget / Goal / Account cards ---------- */
+  .prog-card{background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:14px; margin-bottom:10px; cursor:pointer;}
+  .prog-card .top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:8px;}
+  .prog-card .name{font-size:14px; font-weight:700;}
+  .prog-card .sub{font-size:12px; color:var(--sub); margin-top:2px;}
+  .prog-card .amt{font-size:12px; color:var(--sub); text-align:right;}
+  .prog-bar{height:8px; border-radius:6px; background:#EEF1F0; overflow:hidden;}
+  .prog-bar .fill{height:100%; border-radius:6px; background:var(--accent); transition:width .3s;}
+  .prog-bar .fill.warn{background:var(--warn);}
+  .prog-bar .fill.over{background:var(--danger);}
+
+  .acct-card{background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:14px 16px;
+    display:flex; align-items:center; gap:12px; margin-bottom:10px; cursor:pointer;}
+  .acct-card .ic{width:40px; height:40px; border-radius:10px; background:#EEF6F3; display:flex; align-items:center;
+    justify-content:center; font-size:19px; flex-shrink:0;}
+  .acct-card .mid{flex:1;}
+  .acct-card .name{font-size:14px; font-weight:700;}
+  .acct-card .type{font-size:12px; color:var(--sub);}
+  .acct-card .bal{font-size:14px; font-weight:700;}
+
+  .recur-item{background:var(--card); border-radius:12px; box-shadow:var(--shadow); padding:12px 14px;
+    display:flex; align-items:center; gap:10px; margin-bottom:8px; cursor:pointer;}
+  .recur-item .mid{flex:1; min-width:0;}
+  .recur-item .cat{font-size:13px; font-weight:700;}
+  .recur-item .sub{font-size:11px; color:var(--sub);}
+  .recur-item .amt{font-size:13px; font-weight:700;}
+  .recur-item.inactive{opacity:.45;}
+
+  .section-head{display:flex; align-items:center; justify-content:space-between; margin:22px 2px 8px;}
+  .section-head h3{margin:0; font-size:13px; color:var(--sub); font-weight:600;}
+  .btn-add-small{background:#EEF6F3; color:var(--accent-dk); border:none; border-radius:8px; padding:6px 12px;
+    font-size:12px; font-weight:700; cursor:pointer;}
+
+  /* ---------- FAB ---------- */
+  .fab{position:fixed; right:calc(50% - 240px + 20px); bottom:88px; width:58px; height:58px; border-radius:50%;
+    background:var(--accent); color:#fff; border:none; font-size:28px; box-shadow:0 4px 14px rgba(22,160,133,.45);
+    cursor:pointer; z-index:20;}
+  @media (max-width:480px){ .fab{ right:20px; } }
+
+  /* ---------- Bottom tab bar ---------- */
+  .tabbar{position:fixed; left:0; right:0; bottom:0; z-index:20; background:var(--card);
+    border-top:1px solid var(--line); display:flex; max-width:480px; margin:0 auto;
+    padding-bottom:env(safe-area-inset-bottom,0px);}
+  .tabbar button{flex:1; background:none; border:none; padding:9px 4px 8px; display:flex; flex-direction:column;
+    align-items:center; gap:2px; color:var(--sub); font-size:10px; font-weight:600; cursor:pointer;}
+  .tabbar button .ic{font-size:19px;}
+  .tabbar button.active{color:var(--accent-dk);}
+
+  /* ---------- Modal ---------- */
+  .overlay{position:fixed; inset:0; background:rgba(10,20,18,.45); z-index:30; display:none;
+    align-items:flex-end; justify-content:center;}
+  .overlay.show{display:flex;}
+  .sheet{background:var(--card); width:100%; max-width:480px; border-radius:20px 20px 0 0;
+    padding:18px 18px calc(env(safe-area-inset-bottom,0px) + 18px); max-height:88vh; overflow-y:auto;}
+  .sheet h3{margin:0 0 14px; font-size:16px;}
+  .type-toggle{display:flex; background:#EEF1F0; border-radius:10px; padding:4px; margin-bottom:14px;}
+  .type-toggle button{flex:1; border:none; background:transparent; padding:9px; border-radius:8px;
+    font-size:13px; font-weight:600; color:var(--sub); cursor:pointer;}
+  .type-toggle button.active.pemasukan{background:var(--in); color:#fff;}
+  .type-toggle button.active.pengeluaran{background:var(--out); color:#fff;}
+  .type-toggle button.active.transfer{background:#4A6FA5; color:#fff;}
+  .field{margin-bottom:12px;}
+  .field label{display:block; font-size:12px; color:var(--sub); margin-bottom:5px; font-weight:600;}
+  .field input, .field select, .field textarea{width:100%; border:1px solid var(--line); border-radius:10px;
+    padding:11px 12px; font-size:15px; font-family:inherit; background:#fff; color:var(--ink);}
+  .field textarea{resize:vertical; min-height:44px;}
+  .field-check{display:flex; align-items:center; gap:8px; margin-bottom:12px;}
+  .field-check input{width:18px; height:18px;}
+  .field-check label{font-size:13px; font-weight:600;}
+  .amount-input{position:relative;}
+  .amount-input span{position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--sub); font-size:15px;}
+  .amount-input input{padding-left:34px; font-weight:700; font-size:17px;}
+  .sheet-actions{display:flex; gap:10px; margin-top:16px;}
+  .btn{flex:1; border:none; border-radius:10px; padding:13px; font-size:14px; font-weight:700; cursor:pointer;}
+  .btn-primary{background:var(--accent); color:#fff;}
+  .btn-secondary{background:#EEF1F0; color:var(--ink);}
+  .btn-danger{background:#FBEAE5; color:var(--danger);}
+  .toast{position:fixed; bottom:88px; left:50%; transform:translateX(-50%); background:#1C2A27; color:#fff;
+    padding:10px 18px; border-radius:10px; font-size:13px; z-index:50; opacity:0; transition:opacity .25s; pointer-events:none;}
+  .toast.show{opacity:1;}
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ===== Login ===== -->
+  <div id="loginView">
+    <div class="logo">💰</div>
+    <h1>Keuangan TMRIZK</h1>
+    <p>Kelola uangmu: akun, pemasukan, pengeluaran, anggaran, sampai target tabungan. Login pakai akun Google — datamu privat, hanya kamu yang bisa lihat.</p>
+    <button class="btn-google" id="btnGoogleLogin">
+      <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3c-1.6 4.7-6.1 8-11.3 8-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6 29.6 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.6 15.9 18.9 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 6 29.6 4 24 4 16.3 4 9.6 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.5 0 10.4-1.9 14.1-5.1l-6.5-5.5C29.6 35.4 26.9 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.6 5.1C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.3-2.2 4.2-4.1 5.6l6.5 5.5C39.9 37 44 31 44 24c0-1.3-.1-2.7-.4-3.5z"/></svg>
+      Login dengan Google
+    </button>
+    <p id="loginError" class="hidden" style="color:var(--danger); font-size:12px;"></p>
+  </div>
+
+  <!-- ===== Main app ===== -->
+  <div id="mainView" class="hidden" style="display:flex; flex-direction:column; flex:1;">
+    <header>
+      <div class="row">
+        <div class="who">
+          <img id="userAvatar" src="" alt="">
+          <span id="userName">-</span>
+        </div>
+        <button class="logout" id="btnLogout">Keluar</button>
+      </div>
+      <h2 id="headerTitle">Beranda</h2>
+      <div class="month-nav hidden" id="monthNavWrap">
+        <button id="prevMonth">‹</button>
+        <div class="label" id="monthLabel">-</div>
+        <button id="nextMonth">›</button>
+      </div>
+    </header>
+
+    <main>
+
+      <!-- ===== Beranda ===== -->
+      <div class="tab-view" data-tab="beranda">
+        <div class="card total-saldo">
+          <div class="lbl">Total saldo semua akun</div>
+          <div class="val" id="totalSaldo">Rp0</div>
+        </div>
+        <div class="card summary">
+          <div class="saldo">
+            <div class="lbl">Arus kas bulan ini</div>
+            <div class="val" id="sumSaldo">Rp0</div>
+          </div>
+          <div class="stat inn"><div class="lbl">Pemasukan</div><div class="val" id="sumIn">Rp0</div></div>
+          <div class="stat out"><div class="lbl">Pengeluaran</div><div class="val" id="sumOut">Rp0</div></div>
+        </div>
+        <div class="card">
+          <h3>Pengeluaran per kategori</h3>
+          <canvas id="catChart" height="180"></canvas>
+          <div id="catChartEmpty" class="chart-empty hidden">Belum ada pengeluaran bulan ini</div>
+        </div>
+        <div class="list-head"><h3>Anggaran</h3><button class="link" data-goto="anggaran">Lihat semua</button></div>
+        <div id="budgetPreview"></div>
+        <div class="list-head"><h3>Transaksi terakhir</h3><button class="link" data-goto="transaksi">Lihat semua</button></div>
+        <div id="recentTx"></div>
+      </div>
+
+      <!-- ===== Transaksi ===== -->
+      <div class="tab-view" data-tab="transaksi">
+        <div id="txList"></div>
+      </div>
+
+      <!-- ===== Anggaran ===== -->
+      <div class="tab-view" data-tab="anggaran">
+        <div id="budgetList"></div>
+      </div>
+
+      <!-- ===== Tabungan ===== -->
+      <div class="tab-view" data-tab="tabungan">
+        <div id="goalList"></div>
+      </div>
+
+      <!-- ===== Akun ===== -->
+      <div class="tab-view" data-tab="akun">
+        <div id="accountList"></div>
+        <div class="section-head"><h3>Transaksi Berulang</h3><button class="btn-add-small" id="btnAddRecurring">+ Tambah</button></div>
+        <div id="recurringList"></div>
+      </div>
+
+    </main>
+
+    <button class="fab" id="btnFab">+</button>
+
+    <nav class="tabbar">
+      <button data-tab="beranda" class="active"><span class="ic">🏠</span>Beranda</button>
+      <button data-tab="transaksi"><span class="ic">🧾</span>Transaksi</button>
+      <button data-tab="anggaran"><span class="ic">📊</span>Anggaran</button>
+      <button data-tab="tabungan"><span class="ic">🐷</span>Tabungan</button>
+      <button data-tab="akun"><span class="ic">👛</span>Akun</button>
+    </nav>
+  </div>
+
+  <!-- ===== Sheet: Transaksi ===== -->
+  <div class="overlay" id="txOverlay">
+    <div class="sheet">
+      <h3 id="txSheetTitle">Tambah Transaksi</h3>
+      <div class="type-toggle">
+        <button type="button" class="pengeluaran" id="typePengeluaran">Pengeluaran</button>
+        <button type="button" class="pemasukan" id="typePemasukan">Pemasukan</button>
+        <button type="button" class="transfer" id="typeTransfer">Transfer</button>
+      </div>
+      <div class="field amount-input">
+        <label>Jumlah</label>
+        <span>Rp</span>
+        <input type="number" id="fAmount" inputmode="numeric" placeholder="0">
+      </div>
+      <div class="field">
+        <label id="fAccountLabel">Akun</label>
+        <select id="fAccount"></select>
+      </div>
+      <div class="field hidden" id="fToAccountWrap">
+        <label>Ke akun</label>
+        <select id="fToAccount"></select>
+      </div>
+      <div class="field" id="fCategoryWrap">
+        <label>Kategori</label>
+        <select id="fCategory"></select>
+      </div>
+      <div class="field hidden" id="fGoalWrap">
+        <label>Kaitkan ke target tabungan (opsional)</label>
+        <select id="fGoal"></select>
+      </div>
+      <div class="field">
+        <label>Tanggal</label>
+        <input type="date" id="fDate">
+      </div>
+      <div class="field">
+        <label>Catatan (opsional)</label>
+        <textarea id="fNote" placeholder="Contoh: makan siang di warung"></textarea>
+      </div>
+      <div class="sheet-actions">
+        <button class="btn btn-secondary" id="txCancel">Batal</button>
+        <button class="btn btn-danger hidden" id="txDelete">Hapus</button>
+        <button class="btn btn-primary" id="txSave">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Sheet: Akun ===== -->
+  <div class="overlay" id="acctOverlay">
+    <div class="sheet">
+      <h3 id="acctSheetTitle">Tambah Akun</h3>
+      <div class="field">
+        <label>Nama akun</label>
+        <input type="text" id="aName" placeholder="Contoh: BCA, Cash, GoPay">
+      </div>
+      <div class="field">
+        <label>Jenis</label>
+        <select id="aType">
+          <option value="cash">Cash</option>
+          <option value="bank">Bank</option>
+          <option value="ewallet">E-wallet</option>
+          <option value="lainnya">Lainnya</option>
+        </select>
+      </div>
+      <div class="field amount-input">
+        <label>Saldo awal</label>
+        <span>Rp</span>
+        <input type="number" id="aBalance" inputmode="numeric" placeholder="0">
+      </div>
+      <div class="sheet-actions">
+        <button class="btn btn-secondary" id="acctCancel">Batal</button>
+        <button class="btn btn-danger hidden" id="acctDelete">Hapus</button>
+        <button class="btn btn-primary" id="acctSave">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Sheet: Anggaran ===== -->
+  <div class="overlay" id="budgetOverlay">
+    <div class="sheet">
+      <h3 id="budgetSheetTitle">Tambah Anggaran</h3>
+      <div class="field">
+        <label>Kategori</label>
+        <select id="bCategory"></select>
+      </div>
+      <div class="field amount-input">
+        <label>Limit per bulan</label>
+        <span>Rp</span>
+        <input type="number" id="bLimit" inputmode="numeric" placeholder="0">
+      </div>
+      <div class="sheet-actions">
+        <button class="btn btn-secondary" id="budgetCancel">Batal</button>
+        <button class="btn btn-danger hidden" id="budgetDelete">Hapus</button>
+        <button class="btn btn-primary" id="budgetSave">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Sheet: Tabungan ===== -->
+  <div class="overlay" id="goalOverlay">
+    <div class="sheet">
+      <h3 id="goalSheetTitle">Tambah Target Tabungan</h3>
+      <div class="field">
+        <label>Nama target</label>
+        <input type="text" id="gName" placeholder="Contoh: Liburan ke Bali">
+      </div>
+      <div class="field amount-input">
+        <label>Target jumlah</label>
+        <span>Rp</span>
+        <input type="number" id="gTarget" inputmode="numeric" placeholder="0">
+      </div>
+      <div class="field">
+        <label>Target tanggal (opsional)</label>
+        <input type="date" id="gDate">
+      </div>
+      <div class="sheet-actions">
+        <button class="btn btn-secondary" id="goalCancel">Batal</button>
+        <button class="btn btn-danger hidden" id="goalDelete">Hapus</button>
+        <button class="btn btn-primary" id="goalSave">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Sheet: Transaksi Berulang ===== -->
+  <div class="overlay" id="recurOverlay">
+    <div class="sheet">
+      <h3 id="recurSheetTitle">Tambah Transaksi Berulang</h3>
+      <div class="type-toggle">
+        <button type="button" class="pengeluaran" id="rTypePengeluaran">Pengeluaran</button>
+        <button type="button" class="pemasukan" id="rTypePemasukan">Pemasukan</button>
+      </div>
+      <div class="field amount-input">
+        <label>Jumlah</label>
+        <span>Rp</span>
+        <input type="number" id="rAmount" inputmode="numeric" placeholder="0">
+      </div>
+      <div class="field">
+        <label>Akun</label>
+        <select id="rAccount"></select>
+      </div>
+      <div class="field">
+        <label>Kategori</label>
+        <select id="rCategory"></select>
+      </div>
+      <div class="field">
+        <label>Tanggal tiap bulan</label>
+        <input type="number" id="rDay" min="1" max="28" placeholder="Contoh: 25">
+      </div>
+      <div class="field">
+        <label>Catatan (opsional)</label>
+        <input type="text" id="rNote" placeholder="Contoh: Langganan Netflix">
+      </div>
+      <div class="field-check">
+        <input type="checkbox" id="rActive" checked>
+        <label for="rActive">Aktif</label>
+      </div>
+      <div class="sheet-actions">
+        <button class="btn btn-secondary" id="recurCancel">Batal</button>
+        <button class="btn btn-danger hidden" id="recurDelete">Hapus</button>
+        <button class="btn btn-primary" id="recurSave">Simpan</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

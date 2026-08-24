@@ -1,0 +1,19 @@
+{
+  "name": "Keuangan TMRIZK",
+  "short_name": "Keuangan",
+  "description": "Manajemen keuangan pribadi: akun, transaksi, anggaran, target tabungan",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "id",
+  "dir": "ltr",
+  "background_color": "#F4F6F5",
+  "theme_color": "#16A085",
+  "categories": ["finance", "productivity"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
