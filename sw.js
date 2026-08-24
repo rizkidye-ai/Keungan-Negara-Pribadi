@@ -1,5 +1,5 @@
-const CACHE = 'keuangan-tmrizk-v1';
-const ASSETS = ['index.html', 'app.js', 'config.js', 'manifest.json'];
+const CACHE = 'keuangan-tmrizk-v2';
+const ASSETS = ['index.html', 'app.js', 'config.js', 'icons.js', 'manifest.json', 'privacy.html', 'terms.html'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)));

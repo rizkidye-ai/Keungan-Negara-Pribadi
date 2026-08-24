@@ -11,14 +11,14 @@ const DEFAULT_CATEGORIES = {
 };
 
 const ACCOUNT_TYPES = {
-  cash:    { label: 'Cash',      icon: '💵' },
-  bank:    { label: 'Bank',      icon: '🏦' },
-  ewallet: { label: 'E-wallet',  icon: '📱' },
-  lainnya: { label: 'Lainnya',   icon: '💼' }
+  cash:    { label: 'Cash',      icon: 'banknote' },
+  bank:    { label: 'Bank',      icon: 'landmark' },
+  ewallet: { label: 'E-wallet',  icon: 'smartphone' },
+  lainnya: { label: 'Lainnya',   icon: 'briefcase' }
 };
 
 const CATEGORY_ICONS = {
-  Makan: '🍔', Transport: '🚗', Belanja: '🛍️', Tagihan: '🧾', Hiburan: '🎬',
-  Kesehatan: '💊', Pendidikan: '📚', Tabungan: '🐷', Lainnya: '📦',
-  Gaji: '💼', Bonus: '🎁', Hadiah: '🎉', Usaha: '📈', Transfer: '⇄'
+  Makan: 'utensils', Transport: 'car', Belanja: 'shopping-bag', Tagihan: 'file-text', Hiburan: 'film',
+  Kesehatan: 'heart-pulse', Pendidikan: 'book-open', Tabungan: 'piggy-bank', Lainnya: 'package',
+  Gaji: 'briefcase', Bonus: 'gift', Hadiah: 'gift', Usaha: 'trending-up', Transfer: 'arrow-lr'
 };

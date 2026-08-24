@@ -38,8 +38,8 @@ function toast(msg){
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-function emptyState(icon, html){
-  return `<div class="empty-state"><div class="eic2">${icon}</div>${html}</div>`;
+function emptyState(iconName, html){
+  return `<div class="empty-state"><div class="eic2">${icon(iconName)}</div>${html}</div>`;
 }
 
 /* ---------------- Auth ---------------- */
@@ -54,17 +54,32 @@ async function initAuth(){
   renderShell();
 }
 
-$('btnGoogleLogin').addEventListener('click', async () => {
-  $('loginError').classList.add('hidden');
+async function startGoogleLogin(){
+  $('loginErrorBox').classList.add('hidden');
+  const btn = $('btnGoogleLogin');
+  btn.disabled = true;
+  $('googleBtnLabel').textContent = 'Menghubungkan...';
+  const gicon = btn.querySelector('svg');
+  gicon.style.display = 'none';
+  const spinner = document.createElement('span');
+  spinner.className = 'spinner';
+  btn.insertBefore(spinner, btn.firstChild);
+
   const { error } = await supa.auth.signInWithOAuth({
     provider: 'google',
     options: { redirectTo: window.location.origin + window.location.pathname }
   });
   if (error){
-    $('loginError').textContent = error.message;
-    $('loginError').classList.remove('hidden');
+    $('loginErrorDesc').textContent = 'Kami tidak dapat menghubungkan akun Google kamu. Silakan coba lagi.';
+    $('loginErrorBox').classList.remove('hidden');
+    spinner.remove();
+    gicon.style.display = '';
+    $('googleBtnLabel').textContent = 'Login dengan Google';
+    btn.disabled = false;
   }
-});
+}
+$('btnGoogleLogin').addEventListener('click', startGoogleLogin);
+$('btnRetryLogin').addEventListener('click', startGoogleLogin);
 
 $('btnLogout').addEventListener('click', async () => {
   await supa.auth.signOut();
@@ -250,7 +265,7 @@ function renderBeranda(){
   const bp = $('budgetPreview');
   bp.innerHTML = '';
   if (!budgets.length){
-    bp.innerHTML = emptyState('📊', 'Belum ada anggaran diatur.');
+    bp.innerHTML = emptyState('bar-chart', 'Belum ada anggaran diatur.');
   } else {
     for (const b of budgets.slice(0, 3)) bp.appendChild(budgetCardEl(b));
   }
@@ -259,7 +274,7 @@ function renderBeranda(){
   rt.innerHTML = '';
   const recent = transactions.slice(0, 5);
   if (!recent.length){
-    rt.innerHTML = emptyState('🧾', 'Belum ada transaksi.<br>Tekan tombol + untuk mulai mencatat.');
+    rt.innerHTML = emptyState('receipt', 'Belum ada transaksi.<br>Tekan tombol + untuk mulai mencatat.');
   } else {
     for (const t of recent) rt.appendChild(txRowEl(t));
   }
@@ -272,7 +287,7 @@ function renderTransaksiTab(){
   box.innerHTML = '';
   const mtx = txInMonth();
   if (!mtx.length){
-    box.innerHTML = emptyState('🧾', 'Belum ada transaksi bulan ini.<br>Tekan tombol + untuk mulai mencatat.');
+    box.innerHTML = emptyState('receipt', 'Belum ada transaksi bulan ini.<br>Tekan tombol + untuk mulai mencatat.');
     return;
   }
   const groups = {};
@@ -290,13 +305,13 @@ function renderTransaksiTab(){
 function txRowEl(t){
   const row = document.createElement('div');
   row.className = 'tx ' + t.type;
-  const icon = t.type === 'transfer' ? '⇄' : (CATEGORY_ICONS[t.category] || (t.type === 'pemasukan' ? '↓' : '↑'));
+  const iconName = t.type === 'transfer' ? 'arrow-lr' : (CATEGORY_ICONS[t.category] || (t.type === 'pemasukan' ? 'arrow-down' : 'arrow-up'));
   const sign = t.type === 'pemasukan' ? '+' : (t.type === 'transfer' ? '' : '-');
   const catLabel = t.type === 'transfer'
     ? (accountName(t.account_id) + ' → ' + accountName(t.to_account_id))
     : escapeHtml(t.category);
   row.innerHTML = `
-    <div class="icon">${icon}</div>
+    <div class="icon">${icon(iconName)}</div>
     <div class="mid">
       <div class="cat">${catLabel}</div>
       <div class="note">${escapeHtml(t.note || accountName(t.account_id))}</div>
@@ -316,7 +331,7 @@ function budgetCardEl(b){
   const el = document.createElement('div');
   el.className = 'prog-card';
   el.innerHTML = `
-    <div class="icon-box">${CATEGORY_ICONS[b.category] || '📊'}</div>
+    <div class="icon-box">${icon(CATEGORY_ICONS[b.category] || 'bar-chart')}</div>
     <div class="pc-body">
       <div class="top">
         <div><div class="name">${escapeHtml(b.category)}</div><div class="sub">${pct}% terpakai</div></div>
@@ -333,7 +348,7 @@ function renderAnggaranTab(){
   const box = $('budgetList');
   box.innerHTML = '';
   if (!budgets.length){
-    box.innerHTML = emptyState('📊', 'Belum ada anggaran.<br>Tekan tombol + untuk atur limit per kategori.');
+    box.innerHTML = emptyState('bar-chart', 'Belum ada anggaran.<br>Tekan tombol + untuk atur limit per kategori.');
     return;
   }
   for (const b of budgets) box.appendChild(budgetCardEl(b));
@@ -348,7 +363,7 @@ function goalCardEl(g){
   el.className = 'prog-card';
   const dateLbl = g.target_date ? ('Target: ' + g.target_date) : '';
   el.innerHTML = `
-    <div class="icon-box">🎯</div>
+    <div class="icon-box">${icon('target')}</div>
     <div class="pc-body">
       <div class="top">
         <div><div class="name">${escapeHtml(g.name)}</div><div class="sub">${dateLbl}</div></div>
@@ -365,7 +380,7 @@ function renderTabunganTab(){
   const box = $('goalList');
   box.innerHTML = '';
   if (!goals.length){
-    box.innerHTML = emptyState('🎯', 'Belum ada target tabungan.<br>Tekan tombol + untuk bikin target baru.');
+    box.innerHTML = emptyState('target', 'Belum ada target tabungan.<br>Tekan tombol + untuk bikin target baru.');
     return;
   }
   for (const g of goals) box.appendChild(goalCardEl(g));
@@ -377,14 +392,14 @@ function renderAkunTab(){
   const box = $('accountList');
   box.innerHTML = '';
   if (!accounts.length){
-    box.innerHTML = emptyState('👛', 'Belum ada akun.<br>Tekan tombol + untuk tambah akun (Cash, Bank, E-wallet, dll).');
+    box.innerHTML = emptyState('wallet', 'Belum ada akun.<br>Tekan tombol + untuk tambah akun (Cash, Bank, E-wallet, dll).');
   } else {
     for (const a of accounts){
       const t = ACCOUNT_TYPES[a.type] || ACCOUNT_TYPES.lainnya;
       const el = document.createElement('div');
       el.className = 'acct-card';
       el.innerHTML = `
-        <div class="icon-box">${t.icon}</div>
+        <div class="icon-box">${icon(t.icon)}</div>
         <div class="mid"><div class="name">${escapeHtml(a.name)}</div><div class="type">${t.label}</div></div>
         <div class="bal">${rupiah(accountBalance(a.id))}</div>
       `;
@@ -396,7 +411,7 @@ function renderAkunTab(){
   const rl = $('recurringList');
   rl.innerHTML = '';
   if (!recurring.length){
-    rl.innerHTML = emptyState('🔁', 'Belum ada transaksi berulang.');
+    rl.innerHTML = emptyState('repeat', 'Belum ada transaksi berulang.');
     return;
   }
   for (const r of recurring){
@@ -404,7 +419,7 @@ function renderAkunTab(){
     el.className = 'recur-item' + (r.active ? '' : ' inactive');
     const sign = r.type === 'pemasukan' ? '+' : '-';
     el.innerHTML = `
-      <div class="icon-box">${CATEGORY_ICONS[r.category] || '🔁'}</div>
+      <div class="icon-box">${icon(CATEGORY_ICONS[r.category] || 'repeat')}</div>
       <div class="mid">
         <div class="cat">${escapeHtml(r.category)}</div>
         <div class="sub">${accountName(r.account_id)} · tgl ${r.day_of_month} tiap bulan${r.active ? '' : ' · nonaktif'}</div>
@@ -771,6 +786,7 @@ $('btnEmptyAddExpense').addEventListener('click', () => openTxSheet(null));
 
 /* ---------------- Boot ---------------- */
 
+renderStaticIcons();
 setTxType('pengeluaran');
 setRecurType('pengeluaran');
 setTab('beranda');
